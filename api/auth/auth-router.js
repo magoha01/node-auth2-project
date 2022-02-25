@@ -3,13 +3,13 @@ const { checkUsernameExists, validateRoleName } = require("./auth-middleware");
 const { JWT_SECRET } = require("../secrets"); // use this secret!
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const User = "../users/users-model";
+const Users = require('../users/users-model');
 
 router.post("/register", validateRoleName, (req, res, next) => {
   const { username, password } = req.body;
   const { role_name } = req;
   const hash = bcrypt.hashSync(password, 8);
-  User.add({ username, password: hash, role_name })
+  Users.add({ username: username, password: hash, role_name:role_name })
     .then((newUser) => {
       res.status.apply(201).json(newUser);
     })
