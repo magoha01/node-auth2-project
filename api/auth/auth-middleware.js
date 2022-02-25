@@ -6,17 +6,17 @@ const restricted = (req, res, next) => {
   const token = req.headers.authorization;
 
   if (token) {
-     jwt.verify(token, JWT_SECRET, (err, decodedToken) => {
-    if (err) {
-      next({ status: 401, message: "Token required" });
-    } else {
-       req.decodedToken = decodedToken;
-      next(); 
-    }
-     });
+    jwt.verify(token, JWT_SECRET, (err, decodedToken) => {
+      if (err) {
+        next({ status: 401, message: "Token invalid" });
+      } else {
+        req.decodedToken = decodedToken;
+        next();
+      }
+    });
   } else {
-      next({ status: 401, message: "token required" });
-    }
+    next({ status: 401, message: "token required" });
+  }
   /*
     If the user does not provide a token in the Authorization header:
     status 401
@@ -84,7 +84,7 @@ const validateRoleName = (req, res, next) => {
   if (req.body.role_name.trim().length > 32) {
     next({ status: 422, message: "Role name can not be longer than 32 chars" });
   } else {
-    req.role_name = req.body.role_name.trim;
+    req.role_name = req.body.role_name.trim();
     next();
   }
 
